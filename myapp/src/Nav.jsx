@@ -7,7 +7,7 @@ function Nav(){
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="#routes">Routes</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="/admin">Admin</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="/login">Login</a></li>
             </ul>

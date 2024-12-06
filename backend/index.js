@@ -54,6 +54,30 @@ app.post("/login",function(req,res){
     })
     
     
+});
+
+app.post("/login-admin",function(req,res){
+    const email=req.body.email;
+    const password=req.body.password;
+    // console.log(req.body);
+    // res.send("hi");
+    console.log(process.env.secret);
+    conn.query("select * from admin where email=? and password=?",[email,password],function(err,result){
+        
+        if(result.length>0){
+            // console.log("hi");
+            const user={email:email,password:password,admin:1};
+            var token = jwt.sign(user, process.env.secret);
+            // const id=setuser(user);
+            // res.cookie("id",id);
+            res.status(200).send({token:token});
+        }
+        else{
+            res.status(404).send();
+        }
+    })
+    
+    
 })
 app.post("/signup",function(req,res){
     const email=req.body.email;
@@ -64,16 +88,26 @@ app.post("/signup",function(req,res){
     conn.query("select * from users where email=? ",[email],function(err,result){
         
         if(result.length>0){
-            console.log('eerr');
+            // console.log('eerr');
             res.status(404).send();
         }
         else{
-            console.log("hi");
+            // console.log("hi");
             const user={email:email,password:password};
             var token = jwt.sign(user, process.env.secret);
+            conn.query("insert into users (email,password)values (?,?)",[email,password],function(err,result){
+                if(!err){
+                    console.log("hi");
+                    res.status(200).send({token:token});
+                }
+                else{
+                    console.log(err);
+                    res.status(500).send();
+                }
+            });
             // const id=setuser(user);
             // res.cookie("id",id);
-            res.status(200).send({token:token});
+            
         }
     })
     

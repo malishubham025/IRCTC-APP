@@ -3,7 +3,7 @@ import Nav from "./Nav";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
-function Login(){
+function LoginAdmin(){
     const navigate = useNavigate();
     const [form,setForm]=React.useState({
         email:"",
@@ -11,13 +11,13 @@ function Login(){
     })
     function handleLogin(event){
         if(form.email && form.password){
-            axios.post("http://localhost:3001/login",form).then((res)=>{
+            axios.post("http://localhost:3001/login-admin",form).then((res)=>{
                 
                 if(res.status===200){
                     let token=res.data.token;
                     alert("Login Successfull !");
                     Cookies.set('id', token);
-                    navigate("/");
+                    navigate("/adminpage");
                 }
                 else{
                     console.log("error !");
@@ -79,7 +79,7 @@ function Login(){
                     <button type="submit">Login</button>
                 </div>
             </form>
-            <p class="signup-link">Don't have an account? <a href="/signup">Sign up</a></p>
+            {/* <p class="signup-link">Don't have an account? <a href="/signup">Sign up</a></p> */}
         </section>
     
 
@@ -89,4 +89,4 @@ function Login(){
         </div>
     )
 }
-export default Login;
+export default LoginAdmin;

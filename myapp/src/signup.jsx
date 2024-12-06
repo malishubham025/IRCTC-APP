@@ -24,7 +24,13 @@ function Signup(){
                 }
             }).catch((err)=>{
                 console.log(err);
-                console.log("Email  exist !",err);
+                if(err.status===404){
+                    alert("Email Exist");
+                }
+                else if(err.status===500){
+                    alert("Server error occured !");
+                }
+                // console.log("Email  exist !",err);
             })
         }
         else{
