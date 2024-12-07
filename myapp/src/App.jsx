@@ -7,6 +7,7 @@ import Signup from "./signup";
 import Cookies from 'js-cookie';
 import LoginAdmin from "./LoginAdmin";
 import AdminPage from "./AdminPage";
+import ViewTrains from "./View_Trains";
 // function Child({child}){
 //     if(Cookies.get(id)){
 //         return child;
@@ -22,6 +23,7 @@ function App(){
                 <Route path='/signup' element={<Signup/>}></Route>
                 <Route path='/admin' element={<LoginAdmin/>}></Route>
                 <Route path='/adminpage' element={<AdminPage/>}></Route>
+                <Route path='/view-trains' element={<ViewTrains/>}></Route>
             </Routes>
         </Router>
 

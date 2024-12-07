@@ -79,6 +79,73 @@ app.post("/login-admin",function(req,res){
     
     
 })
+
+app.post("/add-train",function(req,res){
+    const source=req.body.source;
+    const destination=req.body.destination;
+    const id=req.body.trainId;
+    const seats=req.body.seats;
+    const name=req.body.name;
+    conn.query("select * from trains where id=?",[id],function(err,result){
+        if(result.length>0){
+            res.status(404).send();
+        }
+        else{
+            conn.query("insert into trains values (?,?,?,?,?)",[id,name,source,destination,seats],function(err1,result1){
+        
+                if(err1){
+                    console.log(err1);
+                    res.status(500).send();
+                }
+                else{
+                    res.status(200).send();
+                }
+            })
+        }
+    })
+
+    
+    
+})
+app.post("/remove-train", function (req, res) {
+    const id = req.body.trainId; // Fixed typo
+    console.log("Received ID:", id); // Debugging log
+
+    conn.query("SELECT * FROM trains WHERE id=?", [id], function (err, result) {
+        if (err) {
+            console.error("Error during select query:", err);
+            return res.status(500).send(); // Internal server error
+        }
+        if (result.length === 0) {
+            return res.status(404).send(); // Not found
+        }
+
+        conn.query("DELETE FROM trains WHERE id=?", [id], function (err1, result1) {
+            if (err1) {
+                console.error("Error during delete query:", err1);
+                return res.status(500).send(); // Internal server error
+            }
+            res.status(200).send(); // Success
+        });
+    });
+});
+
+app.get("/view-trains", (req, res) => {
+    conn.query("SELECT id, name, source, destination, total_seats AS seats FROM trains", (err, result) => {
+        if (err) {
+            console.error("Error during query:", err);
+            return res.status(500).send({ message: "Internal Server Error" });
+        }
+        if (result.length > 0) {
+            console.log(result);
+            res.status(200).send({ data: result });
+        } else {
+            res.status(404).send({ message: "No trains found" });
+        }
+    });
+});
+
+
 app.post("/signup",function(req,res){
     const email=req.body.email;
     const password=req.body.password;
