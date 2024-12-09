@@ -86,12 +86,14 @@ app.post("/add-train",function(req,res){
     const id=req.body.trainId;
     const seats=req.body.seats;
     const name=req.body.name;
-    conn.query("select * from trains where id=?",[id],function(err,result){
+    const date=req.body.date;
+    const time=req.body.time;
+    conn.query("select * from trains where id=? or source=?",[id,source],function(err,result){
         if(result.length>0){
             res.status(404).send();
         }
         else{
-            conn.query("insert into trains values (?,?,?,?,?)",[id,name,source,destination,seats],function(err1,result1){
+            conn.query("insert into trains (id,name,source,destination,total_seats,date,time) values (?,?,?,?,?,?,?)",[id,name,source,destination,seats,date,time],function(err1,result1){
         
                 if(err1){
                     console.log(err1);
@@ -143,6 +145,31 @@ app.get("/view-trains", (req, res) => {
             res.status(404).send({ message: "No trains found" });
         }
     });
+});
+
+app.post("/train-deatails", (req, res) => {
+    const source=req.body.source;
+    const destination=req.body.des;
+    const date=req.body.date;
+    const formattedDate = new Date(date).toISOString().slice(0, 10);
+conn.query(
+    "SELECT * FROM trains WHERE source = ? AND destination = ? AND date = ?",
+    [source, destination, formattedDate],
+    (err, result) => {
+        if (err) {
+            console.error("Error during query:", err);
+            return res.status(500).send({ message: "Internal Server Error" });
+        }
+        if (result.length > 0) {
+            console.log("Result is", result);
+            res.status(200).send(result);
+        } else {
+            console.log(result);
+            res.status(404).send({ message: "No trains found" });
+        }
+    }
+);
+
 });
 
 

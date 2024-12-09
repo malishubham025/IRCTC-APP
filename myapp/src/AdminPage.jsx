@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import timepicker from 'react-time-picker';  
 function AdminPage() {
     const navigate = useNavigate();
     const [addTrainData, setAddTrainData] = useState({
@@ -9,8 +10,11 @@ function AdminPage() {
         trainId: "",
         seats: "",
         name: "",
+        date:"",
+        time:""
     });
-
+    const [value, onChange] = useState('10:00');  
+    
     const [removeTrainData, setRemoveTrainData] = useState({
         trainId: "",
     });
@@ -27,6 +31,13 @@ function AdminPage() {
 
     const handleAddTrainSubmit = async (e) => {
         e.preventDefault();
+        var d = new Date();
+        var v=addTrainData.time.split(":")[0]
+        if(d.getHours()>v){
+            alert("Add time after current time");
+        }
+        else{
+        // console.log(addTrainData.time,d.getHours());
         try {
             const response = await axios.post("http://localhost:3001/add-train", addTrainData);
             if (response.status === 200) {
@@ -37,18 +48,21 @@ function AdminPage() {
                     trainId: "",
                     seats: "",
                     name: "",
+                    date:"",
+                    time:""
                 });
             } else {
                 alert("Failed to add train. Please try again.");
             }
         } catch (err) {
             if(err.status==404){
-                alert("Train ID Exist");
+                alert("Train ID or Source Exist");
             }
             else if(err.status==500){
                 
                 alert("some error occured !");
             }
+        }
         }
     };
 
@@ -89,6 +103,7 @@ function AdminPage() {
             <form onSubmit={handleAddTrainSubmit}>
                 <h3>Add Train</h3>
                 <input
+                    required="true"
                     type="text"
                     placeholder="Train ID"
                     name="trainId"
@@ -96,6 +111,7 @@ function AdminPage() {
                     onChange={handleAddTrainChange}
                 />
                 <input
+                    required="true"
                     type="text"
                     placeholder="Name"
                     name="name"
@@ -103,6 +119,7 @@ function AdminPage() {
                     onChange={handleAddTrainChange}
                 />
                 <input
+                    required="true"
                     type="text"
                     placeholder="Source"
                     name="source"
@@ -110,6 +127,7 @@ function AdminPage() {
                     onChange={handleAddTrainChange}
                 />
                 <input
+                    required="true"
                     type="text"
                     placeholder="Destination"
                     name="destination"
@@ -117,12 +135,31 @@ function AdminPage() {
                     onChange={handleAddTrainChange}
                 />
                 <input
+                    required="true"
                     type="text"
                     placeholder="Seats"
                     name="seats"
                     value={addTrainData.seats}
                     onChange={handleAddTrainChange}
                 />
+                <input
+                    required="true"
+                    type="date"
+                    placeholder="Date"
+                    name="date"
+                    value={addTrainData.date}
+                    onChange={handleAddTrainChange}
+                    min={new Date().toISOString().split("T")[0]} // Setting the minimum date to today's date
+                />
+            <input
+                required={true}
+                type="time"
+                name="time"
+                value={addTrainData.time}
+                onChange={handleAddTrainChange}
+               
+            />
+
                 <button type="submit">Add</button>
             </form>
 
