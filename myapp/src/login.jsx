@@ -3,12 +3,25 @@ import Nav from "./Nav";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
+import GoogleLogin from "./GoogleLogin";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 function Login(){
     const navigate = useNavigate();
     const [form,setForm]=React.useState({
         email:"",
         password:""
     })
+    function handleGoogle(event){
+        axios.get("http://localhost:3000/login-google").then((res)=>{
+            if(res){
+                console.log(res);
+            }
+        }).catch((err)=>{
+            console.log(err);
+            alert("something went wrong");
+        })
+        event.preventDefault();
+    }
     function handleLogin(event){
         if(form.email && form.password){
             axios.post("http://localhost:3001/login",form).then((res)=>{
@@ -78,7 +91,11 @@ function Login(){
                 <div class="form-group">
                     <button type="submit">Login</button>
                 </div>
+                
             </form>
+            <GoogleOAuthProvider clientId="617158057506-1uav9kqb9rk9samamteaorv2h9prpjvt.apps.googleusercontent.com">
+                <GoogleLogin></GoogleLogin>
+            </GoogleOAuthProvider>
             <p class="signup-link">Don't have an account? <a href="/signup">Sign up</a></p>
         </section>
     

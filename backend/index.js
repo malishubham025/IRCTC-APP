@@ -5,21 +5,44 @@ const app=express();
 const cookieParser=require("cookie-parser");
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const { google } = require("googleapis");
+const axios=require("axios");
 require('dotenv').config();
 
 app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
+// console.log(process.env.client_id);
 // app.set("view engine","ejs");
 app.get("/",function(req,res){
     res.send("hello");
+});
+
+
+app.post("/login-google",async (req,res)=>{
+    console.log("code is "+req.body.code);
+    let client_id=process.env.client_id;
+    let client_secret=process.env.client_secret;
+    let client=new google.auth.OAuth2(
+        client_id,
+        client_secret,
+        'postmessage'
+    )
+    let response=await client.getToken(req.body.code);
+    // client.setCredentials(response.tokens);
+    const userRes = await axios.get("https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="+
+        response.tokens.access_token
+    );
+    let {email,name}=userRes.data;
+    console.log("email is "+email+" name is"+name);
+    res.json({"name":"email,name"});
 })
 
 const conn=mysql.createConnection({
     host:"localhost",
     database:"skillindia",
-    password:" ",
+    password:"root",
     user:"root"
 })
 conn.connect((err)=>{

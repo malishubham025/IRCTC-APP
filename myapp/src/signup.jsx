@@ -9,6 +9,17 @@ function Signup(){
         email:"",
         password:""
     })
+    function handleGoogle(event){
+        axios.post("http://localhost:3001/signup-google").then((res)=>{
+            if(res){
+                console.log(res);
+            }
+        }).catch((err)=>{
+            console.log(err);
+            alert("something went wrong");
+        })
+        event.preventDefault();
+    }
     function handleLogin(event){
         if(form.email && form.password){
             axios.post("http://localhost:3001/signup",form).then((res)=>{
@@ -81,6 +92,7 @@ function Signup(){
                     <button type="submit">Signup</button>
                 </div>
             </form>
+            <button className="google-signin" onClick={handleGoogle}><img width="28" height="28" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/> SignUp with Google </button>
             <p class="signup-link">Already have an account? <a href="/login">Login</a></p>
         </section>
     
