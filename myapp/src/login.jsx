@@ -36,7 +36,7 @@ function Login(){
                     console.log("error !");
                 }
             }).catch((err)=>{
-                if(err.status===404){
+                if(err.status===401){
                     alert("User Does not exist !");
                 }
                 else if(err.status===500){

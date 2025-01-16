@@ -3,28 +3,20 @@ import Nav from "./Nav";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
+import GoogleSignup from "./GoogleSignup";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 function Signup(){
     const navigate = useNavigate();
     const [form,setForm]=React.useState({
         email:"",
         password:""
     })
-    function handleGoogle(event){
-        axios.post("http://localhost:3001/signup-google").then((res)=>{
-            if(res){
-                console.log(res);
-            }
-        }).catch((err)=>{
-            console.log(err);
-            alert("something went wrong");
-        })
-        event.preventDefault();
-    }
+ 
     function handleLogin(event){
         if(form.email && form.password){
             axios.post("http://localhost:3001/signup",form).then((res)=>{
                 
-                if(res.status===200){
+                if(res.status===201){
                     let token=res.data.token;
                     alert("Signup Successfull !");
                     Cookies.set('id', token);
@@ -35,7 +27,7 @@ function Signup(){
                 }
             }).catch((err)=>{
                 console.log(err);
-                if(err.status===404){
+                if(err.status===409){
                     alert("Email Exist");
                 }
                 else if(err.status===500){
@@ -92,7 +84,9 @@ function Signup(){
                     <button type="submit">Signup</button>
                 </div>
             </form>
-            <button className="google-signin" onClick={handleGoogle}><img width="28" height="28" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/> SignUp with Google </button>
+            <GoogleOAuthProvider clientId="617158057506-1uav9kqb9rk9samamteaorv2h9prpjvt.apps.googleusercontent.com">
+                <GoogleSignup></GoogleSignup>
+            </GoogleOAuthProvider>
             <p class="signup-link">Already have an account? <a href="/login">Login</a></p>
         </section>
     
