@@ -9,14 +9,24 @@ const { google } = require("googleapis");
 const axios=require("axios");
 require('dotenv').config();
 const {loginRouter}=require("./routes/userLogin");
+const { resolve } = require("url");
 app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
 // console.log(process.env.client_id);
 // app.set("view engine","ejs");
+function fun(){
+    return new Promise((resolve,reject)=>{
+        for(let i=0;i<1e9;i++){}
+        resolve("hi");
+    })
+}
 app.get("/",function(req,res){
-    res.send("hello");
+    fun().then((res1)=>{
+        res.send("hello")
+    });
+    
 });
 
 app.use(loginRouter);//handles login-signup
